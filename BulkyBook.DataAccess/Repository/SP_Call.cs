@@ -25,7 +25,7 @@ namespace BulkyBook.DataAccess.Repository
         {
             _db.Dispose();
         }
-
+        //for update
         public void Execute(string procedureName, DynamicParameters param = null)
         {
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))

@@ -14,7 +14,7 @@ namespace BulkyBook.DataAccess.Repository.IRepository
         T OneRecord<T>(string procedureName, DynamicParameters param = null);
 
         IEnumerable<T> List<T>(string procedureName, DynamicParameters param = null);
-
+        //Returning 2 tables at once:
         Tuple<IEnumerable<T1>, IEnumerable<T2>> List<T1, T2>(string procedureName, DynamicParameters param = null);
     }
 }
