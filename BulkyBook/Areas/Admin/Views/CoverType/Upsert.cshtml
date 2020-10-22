@@ -1,7 +1,9 @@
 ﻿@model BulkyBook.Models.CoverType
 
-@{ Layout = "~/Views/Shared/_Layout.cshtml";
-                var title = "Create Cover Type"; }
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Create Cover Type";
+}
 
 
 <form method="post">
@@ -29,10 +31,12 @@
                 <div class="col-8 offset-4">
                     @if (Model.Id != 0)
                     {
-        <partial name="_EditAndBackToListButton" model="Model.Id" /> }
+                        <partial name="_EditAndBackToListButton" model="Model.Id" />
+                    }
                     else
                     {
-        <partial name="_CreateAndBackToListButton" />}
+                        <partial name="_CreateAndBackToListButton" />
+                    }
                 </div>
             </div>
         </div>

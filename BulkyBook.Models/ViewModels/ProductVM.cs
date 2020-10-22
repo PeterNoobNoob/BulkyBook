@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BulkyBook.Models.ViewModels
 {
-     public class ProductVM
+    public class ProductVM
     {
         public Product Product { get; set; }
         public IEnumerable<SelectListItem> CategoryList { get; set; }

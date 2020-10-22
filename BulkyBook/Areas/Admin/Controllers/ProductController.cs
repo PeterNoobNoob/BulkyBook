@@ -32,9 +32,8 @@ namespace BulkyBook.Areas.Admin.Controllers
         {
             ProductVM productVM = new ProductVM()
             {
-                Product = new Product(),
-                CategoryList = _unitOfWork.Category.GetAll().Select(i => new SelectListItem
-                {
+                Product=new Product(),
+                CategoryList = _unitOfWork.Category.GetAll().Select(i=> new SelectListItem { 
                     Text = i.Name,
                     Value = i.Id.ToString()
                 }),
@@ -82,16 +81,16 @@ namespace BulkyBook.Areas.Admin.Controllers
                             System.IO.File.Delete(imagePath);
                         }
                     }
-                    using (var filesStreams = new FileStream(Path.Combine(uploads, fileName + extenstion), FileMode.Create))
+                    using(var filesStreams = new FileStream(Path.Combine(uploads,fileName+extenstion),FileMode.Create))
                     {
                         files[0].CopyTo(filesStreams);
                     }
-                    productVM.Product.ImageUrl = @"\images\product" + fileName + extenstion;
+                    productVM.Product.ImageUrl = @"\images\products\" + fileName + extenstion;
                 }
                 else
                 {
                     //update when they do not change the image
-                    if (productVM.Product.Id != 0)
+                    if(productVM.Product.Id != 0)
                     {
                         Product objFromDb = _unitOfWork.Product.Get(productVM.Product.Id);
                         productVM.Product.ImageUrl = objFromDb.ImageUrl;
@@ -111,6 +110,23 @@ namespace BulkyBook.Areas.Admin.Controllers
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                productVM.CategoryList = _unitOfWork.Category.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                });
+                productVM.CoverTypeList = _unitOfWork.CoverType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                });
+                if (productVM.Product.Id != 0)
+                {
+                    productVM.Product = _unitOfWork.Product.Get(productVM.Product.Id);
+                }
+            }
             return View(productVM);
         }
 
@@ -120,7 +136,7 @@ namespace BulkyBook.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var allObj = _unitOfWork.Product.GetAll(includeProperties: "Category,CoverType");
+            var allObj = _unitOfWork.Product.GetAll(includeProperties:"Category,CoverType");
             return Json(new { data = allObj });
         }
 
@@ -131,6 +147,12 @@ namespace BulkyBook.Areas.Admin.Controllers
             if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Error while deleting" });
+            }
+            string webRootPath = _hostEnvironment.WebRootPath;
+            var imagePath = Path.Combine(webRootPath, objFromDb.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
             }
             _unitOfWork.Product.Remove(objFromDb);
             _unitOfWork.Save();
